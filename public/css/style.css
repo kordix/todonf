@@ -1,0 +1,13 @@
+@media (max-width:800px){
+    .hidemobile {
+        display:none;
+    }
+}
+
+         #wyloguj {
+             display: block;
+         }
+    
+         .nav-item {
+             margin: 5px !important;
+         }

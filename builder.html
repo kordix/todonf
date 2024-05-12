@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <style>
+        textarea{
+            display:block
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<div class="container">
+    <div id="app">
+        <div class="form-group">
+            <label for="">Nazwa tabeli:</label>
+            <input v-model="nazwatabeli" type="text">
+            <button @click="generateTabela">generuj tabele</button>
+            <button @click="generateRequest">generuj request</button>
+            <button @click="generateInsertStatement">generuj insert</button>
+            <button @click="generateInsertExecute">generuj insert execute</button>
+            <button @click="generateUpdateStatement">generuj update</button>
+            <button @click="generateUpdateExecute">generuj update execute</button>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group" v-for="(elem,index) in dane">
+                    <label for="">Dana{{index+1}} nazwa</label>
+                    <input type="text" v-model="dane[index].nazwa">
+                    <label for="">Dana{{index+1}} typ</label>
+                    <select v-model="dane[index].typ">
+                        <option value="int AUTO_INCREMENT PRIMARY KEY">id</option>
+                        <option value="int">int</option>
+                        <option value="varchar(180)">string</option>
+                        <option value="date">data</option>
+                    </select>
+                    <button @click="remove(index)">usuń</button>
+                </div>
+            </div>
+            <div class="col-2"><button @click="add">dodaj</button> </div>
+        </div>
+        <div>
+        <p>SQL</p>
+        <textarea style="width:500px;height:200px">
+        
+        {{tabela}}
+        </textarea>
+    </div>
+        handlerequest.php
+        <textarea style="width:500px;height:200px">
+            {{request}}
+            </textarea>
+        add.php    
+        <textarea style="width:500px;height:200px">
+            {{insertStatement}}
+        </textarea>
+        add.php
+        <textarea style="width:500px;height:200px">
+            {{insertExecute}}
+        </textarea>
+        update.php
+        <textarea style="width:500px;height:200px">
+            {{updateStatement}}
+        </textarea>
+        update.php
+        <textarea style="width:500px;height:200px">
+            {{updateExecute}}
+        </textarea>
+
+        <button @click="save">zapisz</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            dane: [],
+            nazwatabeli: '',
+            tabela: '',
+            request: '',
+            insertStatement: '',
+            insertExecute:'',
+            updateStatement:'',
+            updateExecute:''
+
+        },
+        created(){
+            if(localStorage.dane){
+                this.dane = JSON.parse(localStorage.dane);
+                this.nazwatabeli = localStorage.tabela;
+            }
+        },
+        methods: {
+            generateTabela() {
+                this.tabela = '';
+                this.tabela += 'CREATE TABLE ' + this.nazwatabeli + ' ( ';
+                for (let i = 0; i < this.dane.length; i++) {
+                    this.tabela += this.dane[i].nazwa + ' ' + this.dane[i].typ;
+
+                    if (i + 1 < this.dane.length) { this.tabela += ',' }
+
+                }
+                this.tabela += ')';
+            },
+            generateRequest() {
+                this.request += ''
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+
+                    } else {
+
+                        this.request += '$' + this.dane[i].nazwa + '=$_POST[\'' + this.dane[i].nazwa + '\'];'
+                    }
+                }
+            },
+            generateInsertStatement() {
+                this.insertStatement += 'INSERT INTO ' + this.nazwatabeli + '(';
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+                    } else {
+                        this.insertStatement += this.dane[i].nazwa;
+                        if (i + 1 < this.dane.length) { this.insertStatement += ',' }
+                    }
+                }
+                this.insertStatement += ') VALUES (';
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+                    } else {
+                        this.insertStatement += '?'
+                        if (i + 1 < this.dane.length) { this.insertStatement += ',' }
+                    }
+                }
+                this.insertStatement += ')';
+            },
+            generateInsertExecute() {
+                this.insertExecute += '[';
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+                    } else {
+                        this.insertExecute += '$' + this.dane[i].nazwa;
+                        if (i + 1 < this.dane.length) { this.insertExecute += ',' }
+                    }
+                }
+                this.insertExecute += ']';
+            },
+            generateUpdateStatement(){
+                this.updateStatement += `UPDATE ${this.nazwatabeli} SET `;
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+                    } else {
+                        this.updateStatement += this.dane[i].nazwa + '=?';
+                        if (i + 1 < this.dane.length) { this.updateStatement += ',' }
+                    }
+                }
+                this.updateStatement += ' WHERE id=?'
+            },
+            generateUpdateExecute(){
+                this.updateExecute += '[';
+                for (let i = 0; i < this.dane.length; i++) {
+                    if (this.dane[i].nazwa == 'id') {
+                    } else {
+                        this.updateExecute += '$' + this.dane[i].nazwa +',';
+                    }
+                }
+                this.updateExecute += '$id]';
+            },
+            add() {
+                this.dane.push({ nazwa: '', typ: '' })
+            },
+            remove(index) {
+                this.dane.splice(index, 1);
+            },
+            save(){
+                localStorage.dane = JSON.stringify(this.dane);
+                localStorage.tabela = this.nazwatabeli;
+
+            }
+        }
+    })
+
+
+    let output = '';
+
+
+
+
+
+
+
+</script>
