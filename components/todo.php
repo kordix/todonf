@@ -34,25 +34,26 @@
 
             </div> -->
 
-            <p v-for="elem in filtered" ><input type="checkbox"  @change="dupa(elem)" v-model="elem.done">  {{elem.title}}   <button v-if="adminmode" type="button" class="btn-sm btn-danger deletebtn" @click="deletem(elem.id)"> x </button></p>
-
+            <div class="todo">
+                <p v-for="elem in filtered" class="task-item"><input type="checkbox"  @change="dupa(elem)" v-model="elem.done">  {{elem.title}}   <button v-if="adminmode" type="button" class="btn-sm btn-danger deletebtn" @click="deletem(elem.id)"> x </button></p>
+            </div>
             <div>    
-            <p><b>Dodaj pozycję:</b></p>
-            <label for="">Title</label>
-            <input type="text" v-model="editedone.title">
+                <br>
+            <p style="margin-bottom:0.5rem"><b>Dodaj pozycję:</b></p>
+            <label for="">Tytuł:</label>
+            <input type="text" v-model="editedone.title" style="width:90%;max-width:400px">
             <br>
-            <label for="">Description</label>
+            <!-- <label for="">Opis</label>
             <input type="text" v-model="editedone.description">
             <br>
             <label for="">Kategoria</label>
             <input type="text" v-model="editedone.kategoria">
             <br>
             <label for="">Kolumna</label>
-            
-            <input type="number" v-model="editedone.kolumna" min="1" max="3">
+             -->
+            <!-- <input type="number" v-model="editedone.kolumna" min="1" max="3"> -->
             <br>
-            <br>
-            <button @click="add" v-if="!editedone.id">Zatwierdź</button>
+            <button @click="add" v-if="!editedone.id" class="btn btn-primary applybutton">Zatwierdź</button>
 
             <button @click="update" v-if="editedone.id">Zmień</button>
 

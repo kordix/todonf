@@ -1,13 +1,81 @@
-@media (max-width:800px){
+@media (max-width:800px) {
     .hidemobile {
-        display:none;
+        display: none;
     }
 }
 
-         #wyloguj {
-             display: block;
-         }
-    
-         .nav-item {
-             margin: 5px !important;
-         }
+#wyloguj {
+    display: block;
+}
+
+.nav-item {
+    margin: 5px !important;
+}
+
+.navbar {
+    background: #2b2d42 !important;
+}
+
+.html {
+    /* font-family: "Rubik", sans-serif !important; */
+}
+
+.navbar-brand {
+    font-family: "Rubik", sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    color: white !important;
+    padding: 0.5rem;
+    font-size: 2rem
+}
+
+.navbar a {
+    color: white !important;
+}
+
+.applybutton {
+    background: #2b2d42 !important;
+    border-color: #2b2d42 !important
+}
+
+.todo p {
+    font-size: 25px;
+}
+
+.todo input {
+    transform: scale(1.5);
+    transform-origin: left center;
+    vertical-align: middle;
+    margin-right: 1rem;
+}
+
+.task-item {
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, background-color 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+    max-width: 400px;
+}
+
+.task-item:has(input:checked) {
+    background-color:lightgreen!important;
+
+}
+
+@media (min-width: 1024px) {
+    body {
+        font-size: 18px;
+        padding: 2rem;
+    }
+
+    .todo-container {
+        min-width: 800px;
+    }
+}

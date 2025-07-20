@@ -28,6 +28,8 @@ if(!isset($_SESSION['zalogowany'])) {
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/rainbow.css">
+
     <style>
         #wyloguj{
             display:block;
@@ -44,7 +46,7 @@ if(!isset($_SESSION['zalogowany'])) {
 <div id="app">
 <?php  include 'navbar.php' ?>
     
-    <div  class="container" id="app">
+    <div  class="todo-container" id="app">
 
 <todo></todo>
 
