@@ -7,11 +7,11 @@ if(!isset($_SESSION['zalogowany'])) {
 
     if(isset($_COOKIE['logintoken'])) {
         // echo $_COOKIE['logintoken'];
-        $_SESSION['zalogowany'] = true;
-        $_SESSION['login'] = 'admin';
+        // $_SESSION['zalogowany'] = true;
+        // $_SESSION['login'] = 'admin';
     } else {
 
-        header('Location: /login.php');
+        // header('Location: /login.php');
 
     }
 }
