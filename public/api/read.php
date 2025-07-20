@@ -25,7 +25,7 @@ $sth = $dbh->prepare("SELECT * FROM todos $where order by id desc");
     return http_response_code(500);
 }finally{
     $sth->execute();
-    $rows = $sth->fetchAll(PDO::FETCH_CLASS, "dummy");
+    $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($rows);
 
 }
