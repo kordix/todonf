@@ -79,3 +79,7 @@
         min-width: 800px;
     }
 }
+
+.navbar .container {
+    flex-wrap:nowrap
+}
