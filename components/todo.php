@@ -1,5 +1,14 @@
 <script type="text/x-template" id="todo">
+
+
     <div>
+
+    
+        <div style="padding:5px">
+            <button class="btn btn-warning" @click="runArchive">Archiwum</button>
+        </div>
+
+    
             <p>Search: <input type="text" v-model="search"></p>
             <!-- <div>
                 <table class="table table-bordered table-dark">
@@ -34,8 +43,12 @@
 
             </div> -->
 
+           
             <div class="todo">
-                <p v-for="elem in filtered" class="task-item"><input type="checkbox"  @change="dupa(elem)" v-model="elem.done">  {{elem.title}}   <button v-if="adminmode" type="button" class="btn-sm btn-danger deletebtn" @click="deletem(elem.id)"> x </button></p>
+                <p v-for="elem in filtered" class="task-item">
+                    <input type="checkbox"  @change="dupa(elem)" v-model="elem.done">  {{elem.title}}   
+                    <button v-if="adminmode" type="button" class="btn-sm btn-danger deletebtn" @click="deletem(elem.id)"> x </button> 
+                    <button v-if="adminmode" type="button" class="btn-sm btn-warning deletebtn" @click="archive(elem.id)"> a </button></p>
             </div>
             <div>    
                 <br>
@@ -70,38 +83,39 @@
         template: '#todo',
         data() {
             return {
+                archivebool: false,
                 heads: [],
                 cruddata: [],
-                cruddataadd:{},
+                cruddataadd: {},
                 editedone: {
-                    title:'',
-                    description:'',
-                    kolumna:1
+                    title: '',
+                    description: '',
+                    kolumna: 1
                 },
                 search: '',
                 sortkey: '',
-                adminmode:false
+                adminmode: false
             }
         },
         created() {
             this.getData();
         },
         methods: {
-            getData(){
+            getData() {
                 let self = this;
-            axios.post('api/read.php', {
-                tabela: 'linki'
-            }).then((res) => {
-                this.cruddata = res.data
-            }).then((res) => self.getHeads());
+                axios.post('api/read.php', {
+                    tabela: 'linki'
+                }).then((res) => {
+                    this.cruddata = res.data
+                })
 
             },
             edit(id) {
                 this.editedone = this.cruddata.find((el) => el.id == id);
             },
-            add(){
+            add() {
                 let self = this;
-                axios.post('api/add.php',{tabela:'linki',dane:this.editedone}).then((res)=>{self.editedone = {};self.getData()})
+                axios.post('api/add.php', { tabela: 'linki', dane: this.editedone }).then((res) => { self.editedone = {}; self.getData() })
             },
             update() {
                 axios.post('api/update.php', {
@@ -118,6 +132,15 @@
                     id: id
                 }).then((res) => console.log(res)).then((res) => location.reload());
             },
+            runArchive() {
+                this.archivebool = !this.archivebool;
+               
+            },
+            archive(id) {
+                axios.post('api/archive.php', {
+                    id: id
+                }).then((res) => console.log(res)).then((res) => location.reload());
+            },
             getHeads() {
                 if (this.cruddata[0]) {
                     this.heads = Object.keys(this.cruddata[0])
@@ -127,7 +150,7 @@
                 console.log('sortby');
                 this.sortkey = elem;
             },
-            dupa(elem){
+            dupa(elem) {
                 axios.post('api/update.php', {
                     dane: elem,
                     id: elem.id
@@ -135,21 +158,30 @@
             }
         },
         computed: {
-            filtered: function() {
+            filtered: function () {
                 let self = this;
                 var filterKey = this.search && this.search.toLowerCase()
                 var order = 1;
                 var filtered = this.cruddata;
+
+                if (this.archivebool) {
+                    filtered = filtered.filter((el) => el.archived == 'Y')
+                }
+
+                if (!this.archivebool) {
+                    filtered = filtered.filter((el) => el.archived == 'N')
+                }
+
                 if (filterKey) {
-                    filtered = filtered.filter(function(row) {
-                        return Object.keys(row).some(function(key) {
+                    filtered = filtered.filter(function (row) {
+                        return Object.keys(row).some(function (key) {
                             return String(row[key]).toLowerCase().indexOf(filterKey) > -1
                         })
                     })
                 }
                 if (this.sortkey) {
 
-                    filtered = filtered.sort(function(a, b) {
+                    filtered = filtered.sort(function (a, b) {
                         console.log(self.sortkey);
 
                         var keyA = a[self.sortkey];

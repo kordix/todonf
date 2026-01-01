@@ -8,3 +8,6 @@ CREATE TABLE `todos` (
     PRIMARY KEY (id)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+alter table table `todos`
+add column archived varchar(1) default 'N';
